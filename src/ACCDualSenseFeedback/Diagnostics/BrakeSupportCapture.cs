@@ -269,8 +269,10 @@ internal sealed class BrakeSupportAnalysis
         bool braking = IsBraking(sample);
         bool rawFresh = BrakeSupportCapture.RawFresh(sample);
         bool pulse = sample.Output.LeftTrigger.Mode == 0x26;
-        bool abs = pulse && sample.Output.LeftTrigger.P8 == 15 && sample.Tuning.AbsPulseScale > 0;
-        bool locked = pulse && sample.Output.LeftTrigger.P8 == 8 && sample.Tuning.LockPulseScale > 0;
+        bool abs = pulse && sample.Output.LeftTrigger.P8 == sample.Tuning.AbsPulseTriggerFrequency &&
+            sample.Tuning.AbsPulseScale > 0;
+        bool locked = pulse && sample.Output.LeftTrigger.P8 == sample.Tuning.LockPulseTriggerFrequency &&
+            sample.Tuning.LockPulseScale > 0;
         double dt = _hasPrevious ? (sample.Timestamp - _previous.Timestamp) / (double)Stopwatch.Frequency : 0;
         bool continuous = _hasPrevious && dt <= .100001;
         if (_hasPrevious && !continuous) _gaps++;
@@ -281,12 +283,14 @@ internal sealed class BrakeSupportAnalysis
             {
                 _pulseSeconds += dt;
                 if (_previousConfirmed) _confirmedPulseSeconds += dt;
-                if (_previous.Output.LeftTrigger.P8 == 15 && _previous.Tuning.AbsPulseScale > 0)
+                if (_previous.Output.LeftTrigger.P8 == _previous.Tuning.AbsPulseTriggerFrequency &&
+                    _previous.Tuning.AbsPulseScale > 0)
                 {
                     _absSeconds += dt;
                     if (_previousConfirmed) _confirmedAbsSeconds += dt;
                 }
-                if (_previous.Output.LeftTrigger.P8 == 8 && _previous.Tuning.LockPulseScale > 0) _lockSeconds += dt;
+                if (_previous.Output.LeftTrigger.P8 == _previous.Tuning.LockPulseTriggerFrequency &&
+                    _previous.Tuning.LockPulseScale > 0) _lockSeconds += dt;
             }
         }
         _rows++;
@@ -306,8 +310,10 @@ internal sealed class BrakeSupportAnalysis
             if (abs) _absRows++;
             if (locked) _lockRows++;
             if (pulse && (!continuous || !IsBraking(_previous) || _previous.Output.LeftTrigger.Mode != 0x26)) _pulseEvents++;
-            if (abs && (!continuous || !IsBraking(_previous) || _previous.Output.LeftTrigger.Mode != 0x26 || _previous.Output.LeftTrigger.P8 != 15)) _absEvents++;
-            if (locked && (!continuous || !IsBraking(_previous) || _previous.Output.LeftTrigger.Mode != 0x26 || _previous.Output.LeftTrigger.P8 != 8)) _lockEvents++;
+            if (abs && (!continuous || !IsBraking(_previous) || _previous.Output.LeftTrigger.Mode != 0x26 ||
+                _previous.Output.LeftTrigger.P8 != _previous.Tuning.AbsPulseTriggerFrequency)) _absEvents++;
+            if (locked && (!continuous || !IsBraking(_previous) || _previous.Output.LeftTrigger.Mode != 0x26 ||
+                _previous.Output.LeftTrigger.P8 != _previous.Tuning.LockPulseTriggerFrequency)) _lockEvents++;
             if (rawFresh)
             {
                 _validBrakeRawRows++;
@@ -420,8 +426,8 @@ internal sealed record BrakeSupportReport
         text.AppendLine($"反馈基线：`{Baseline}`；L2 曲线：`{BrakeProfile}`。记录模式不额外改变反馈参数或反馈算法。").AppendLine();
         text.AppendLine("**本报告只分析软件命令、原始位置和 HID 写入结果。手柄没有实际反力传感器；不能据此证明手指受到的力下降，也不能把阻力档位与振动振幅直接比较为轻重。**").AppendLine();
         text.AppendLine(FormattableString.Invariant($"- 已写入 {Rows} 行；有效制动 {ValidBrakingSeconds:F3} 秒（{ValidBrakingRows} 行；新鲜遥测、刹车输入≥0.05、速度≥5 km/h）。"));
-        text.AppendLine(FormattableString.Invariant($"- 有效制动内请求 L2 脉冲模式 0x26 共 {RequestedPulseEvents} 段、{RequestedPulseSeconds:F3} 秒；其中 ABS 15 Hz {RequestedAbs15HzEvents} 段、{RequestedAbs15HzSeconds:F3} 秒，抱死提示 8 Hz {RequestedLock8HzEvents} 段、{RequestedLock8HzSeconds:F3} 秒。"));
-        text.AppendLine(FormattableString.Invariant($"- 上述脉冲中，有成功 HID 写入、且后续命令保持一致的记录区间为 {SuccessfulCommandPulseSeconds:F3} 秒，其中 ABS 15 Hz 为 {SuccessfulCommandAbs15HzSeconds:F3} 秒。这仍不代表测到了实际反力。"));
+        text.AppendLine(FormattableString.Invariant($"- 有效制动内请求 L2 脉冲模式 0x26 共 {RequestedPulseEvents} 段、{RequestedPulseSeconds:F3} 秒；其中 ABS 脉冲 {RequestedAbs15HzEvents} 段、{RequestedAbs15HzSeconds:F3} 秒，抱死提示 {RequestedLock8HzEvents} 段、{RequestedLock8HzSeconds:F3} 秒。"));
+        text.AppendLine(FormattableString.Invariant($"- 上述脉冲中，有成功 HID 写入、且后续命令保持一致的记录区间为 {SuccessfulCommandPulseSeconds:F3} 秒，其中 ABS 脉冲为 {SuccessfulCommandAbs15HzSeconds:F3} 秒。这仍不代表测到了实际反力。"));
         text.AppendLine($"- 同一物理输出设备的新鲜原始位置：{RawFreshRows} 行；有效制动中 {ValidBrakingRawRows} 行；名义第 7–9 区 {HighNominalZoneRows} 行。");
         text.AppendLine("- 基础阻力档位与脉冲振幅已分别保存在 CSV；两种模式的数字不直接换算为力差，本摘要不根据数字大小判断实际轻重。");
         text.AppendLine($"- 已记录的 HID 写入：成功 {SuccessfulWrites} 次、失败 {FailedWrites} 次；无设备／停止 {NoDeviceRows} 行，dry-run {DryRunRows} 行。常规记录存在节流，成功次数不是全部底层写入的计数。");
@@ -430,9 +436,9 @@ internal sealed record BrakeSupportReport
         if (AbsSoftwareEnabledRows == 0)
             text.AppendLine("软件 ABS 提示全程关闭。即使游戏报告 ABS 介入，也不能把本次基础阻力的轻感归因于软件 ABS 脉冲替换。");
         else if (RequestedAbs15HzRows == 0)
-            text.AppendLine("开启过软件 ABS 提示，但有效制动内未采到 ABS 15 Hz 命令；本次不足以验证 ABS 替换过程。");
+            text.AppendLine("开启过软件 ABS 提示，但有效制动内未采到 ABS 脉冲命令；本次不足以验证 ABS 替换过程。");
         else
-            text.AppendLine("已记录软件 ABS 15 Hz 命令。该模式在协议上替代十区基础阻力，没有与基础阻力同时叠加；本报告确认的是这条软件路径。");
+            text.AppendLine("已记录软件 ABS 脉冲命令。该模式在协议上替代十区基础阻力，没有与基础阻力同时叠加；本报告确认的是这条软件路径。");
         if (ValidBrakingRows < 10) text.AppendLine("有效制动样本不足，请正常行驶并完成几次刹车后再结束采集。");
         if (ValidBrakingRawRows == 0) text.AppendLine("未获得有效制动时的新鲜、同设备物理 L2 原始值；不能判断实际按压是否进入曲线后段。");
         else if (HighNominalZoneRows == 0) text.AppendLine("有效制动中没有进入名义后三区；无法评估后段指令在常用行程的覆盖。");

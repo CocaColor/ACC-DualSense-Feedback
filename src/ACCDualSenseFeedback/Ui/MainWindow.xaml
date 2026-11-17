@@ -234,6 +234,24 @@
                                     <Slider x:Name="AbsPulseSlider" Grid.Column="1" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;ABS pulse strength&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Set to zero to turn off. Right-click to reset to 50.&quot;}" />
                                     <TextBlock x:Name="AbsPulseValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="{ui:Translate Text=&quot;50 · Standard&quot;}" />
                                 </Grid>
+                                <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="AbsPulseTriggerFrequency" PreviewMouseRightButtonUp="FeedbackParameter_RightClick">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterLabelWidth}" /><ColumnDefinition /><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterValueWidth}" /></Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
+                                        <TextBlock FontSize="{x:Static ui:UiTypography.ParameterSize}" FontWeight="{x:Static ui:UiTypography.ParameterWeight}" Text="{ui:Translate Text=&quot;Trigger vibration frequency&quot;}" />
+
+                                    </StackPanel>
+                                    <Slider x:Name="AbsPulseTriggerFrequencySlider" Grid.Column="1" Minimum="0" Maximum="255" SmallChange="1" LargeChange="5" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;ABS pulse trigger frequency&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Right-click to reset to the default frequency.&quot;}" />
+                                    <TextBlock x:Name="AbsPulseTriggerFrequencyValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="15 Hz" />
+                                </Grid>
+                                <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="AbsPulseGripFrequency" PreviewMouseRightButtonUp="FeedbackParameter_RightClick">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterLabelWidth}" /><ColumnDefinition /><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterValueWidth}" /></Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
+                                        <TextBlock FontSize="{x:Static ui:UiTypography.ParameterSize}" FontWeight="{x:Static ui:UiTypography.ParameterWeight}" Text="{ui:Translate Text=&quot;Grip vibration frequency&quot;}" />
+
+                                    </StackPanel>
+                                    <Slider x:Name="AbsPulseGripFrequencySlider" Grid.Column="1" Minimum="0" Maximum="255" SmallChange="1" LargeChange="10" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;ABS pulse grip frequency&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Right-click to reset to the default frequency.&quot;}" />
+                                    <TextBlock x:Name="AbsPulseGripFrequencyValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="16 Hz" />
+                                </Grid>
                                 <Border Height="1" Background="{DynamicResource Brush.Border}" />
                                 <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="LockPulse" PreviewMouseRightButtonUp="FeedbackParameter_RightClick">
                                     <Grid.ColumnDefinitions><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterLabelWidth}" /><ColumnDefinition /><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterValueWidth}" /></Grid.ColumnDefinitions>
@@ -244,6 +262,25 @@
                                     <Slider x:Name="LockPulseSlider" Grid.Column="1" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;Wheel lock pulse strength&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Set to zero to turn off. Right-click to reset to 50.&quot;}" />
                                     <TextBlock x:Name="LockPulseValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="{ui:Translate Text=&quot;50 · Standard&quot;}" />
                                 </Grid>
+                                <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="LockPulseTriggerFrequency" PreviewMouseRightButtonUp="FeedbackParameter_RightClick">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterLabelWidth}" /><ColumnDefinition /><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterValueWidth}" /></Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
+                                        <TextBlock FontSize="{x:Static ui:UiTypography.ParameterSize}" FontWeight="{x:Static ui:UiTypography.ParameterWeight}" Text="{ui:Translate Text=&quot;Trigger vibration frequency&quot;}" />
+
+                                    </StackPanel>
+                                    <Slider x:Name="LockPulseTriggerFrequencySlider" Grid.Column="1" Minimum="0" Maximum="255" SmallChange="1" LargeChange="5" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;Wheel lock trigger frequency&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Right-click to reset to the default frequency.&quot;}" />
+                                    <TextBlock x:Name="LockPulseTriggerFrequencyValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="8 Hz" />
+                                </Grid>
+                                <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="LockPulseGripFrequency" PreviewMouseRightButtonUp="FeedbackParameter_RightClick">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterLabelWidth}" /><ColumnDefinition /><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterValueWidth}" /></Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
+                                        <TextBlock FontSize="{x:Static ui:UiTypography.ParameterSize}" FontWeight="{x:Static ui:UiTypography.ParameterWeight}" Text="{ui:Translate Text=&quot;Grip vibration frequency&quot;}" />
+
+                                    </StackPanel>
+                                    <Slider x:Name="LockPulseGripFrequencySlider" Grid.Column="1" Minimum="0" Maximum="255" SmallChange="1" LargeChange="10" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;Wheel lock grip frequency&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Right-click to reset to the default frequency.&quot;}" />
+                                    <TextBlock x:Name="LockPulseGripFrequencyValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="8 Hz" />
+                                </Grid>
+                                <Border Height="1" Background="{DynamicResource Brush.Border}" />
 
                                 <Border Height="1" Margin="0,15,0,16" Background="{DynamicResource Brush.BorderStrong}" />
                                 <Grid Height="{x:Static ui:UiTypography.ModuleHeaderHeight}">
@@ -273,6 +310,24 @@
                                     <Slider x:Name="ShiftKickSlider" Grid.Column="1" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;Upshift impact strength&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Set to zero to turn off. Right-click to reset to 50.&quot;}" />
                                     <TextBlock x:Name="ShiftKickValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="{ui:Translate Text=&quot;50 · Standard&quot;}" />
                                 </Grid>
+                                <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="ShiftKickTriggerFrequency" PreviewMouseRightButtonUp="FeedbackParameter_RightClick">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterLabelWidth}" /><ColumnDefinition /><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterValueWidth}" /></Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
+                                        <TextBlock FontSize="{x:Static ui:UiTypography.ParameterSize}" FontWeight="{x:Static ui:UiTypography.ParameterWeight}" Text="{ui:Translate Text=&quot;Trigger vibration frequency&quot;}" />
+
+                                    </StackPanel>
+                                    <Slider x:Name="ShiftKickTriggerFrequencySlider" Grid.Column="1" Minimum="0" Maximum="255" SmallChange="1" LargeChange="5" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;Upshift kick trigger frequency&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Right-click to reset to the default frequency.&quot;}" />
+                                    <TextBlock x:Name="ShiftKickTriggerFrequencyValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="28 Hz" />
+                                </Grid>
+                                <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="ShiftKickGripFrequency" PreviewMouseRightButtonUp="FeedbackParameter_RightClick">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterLabelWidth}" /><ColumnDefinition /><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterValueWidth}" /></Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
+                                        <TextBlock FontSize="{x:Static ui:UiTypography.ParameterSize}" FontWeight="{x:Static ui:UiTypography.ParameterWeight}" Text="{ui:Translate Text=&quot;Grip vibration frequency&quot;}" />
+
+                                    </StackPanel>
+                                    <Slider x:Name="ShiftKickGripFrequencySlider" Grid.Column="1" Minimum="0" Maximum="255" SmallChange="1" LargeChange="10" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;Upshift kick grip frequency&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Right-click to reset to the default frequency.&quot;}" />
+                                    <TextBlock x:Name="ShiftKickGripFrequencyValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="32 Hz" />
+                                </Grid>
                                 <Border Height="1" Background="{DynamicResource Brush.Border}" />
                                 <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="RedlinePulse" PreviewMouseRightButtonUp="FeedbackParameter_RightClick">
                                     <Grid.ColumnDefinitions><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterLabelWidth}" /><ColumnDefinition /><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterValueWidth}" /></Grid.ColumnDefinitions>
@@ -282,6 +337,15 @@
                                     </StackPanel>
                                     <Slider x:Name="RedlinePulseSlider" Grid.Column="1" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;Redline pulse strength&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Set to zero to turn off. Right-click to reset to 50.&quot;}" />
                                     <TextBlock x:Name="RedlinePulseValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="{ui:Translate Text=&quot;50 · Standard&quot;}" />
+                                </Grid>
+                                <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="RedlinePulseFrequency" PreviewMouseRightButtonUp="FeedbackParameter_RightClick">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterLabelWidth}" /><ColumnDefinition /><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterValueWidth}" /></Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
+                                        <TextBlock FontSize="{x:Static ui:UiTypography.ParameterSize}" FontWeight="{x:Static ui:UiTypography.ParameterWeight}" Text="{ui:Translate Text=&quot;Trigger vibration frequency&quot;}" />
+
+                                    </StackPanel>
+                                    <Slider x:Name="RedlinePulseFrequencySlider" Grid.Column="1" Minimum="0" Maximum="255" SmallChange="1" LargeChange="5" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;Redline pulse frequency&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Right-click to reset to the default frequency.&quot;}" />
+                                    <TextBlock x:Name="RedlinePulseFrequencyValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="18 Hz" />
                                 </Grid>
                                 <Border Height="1" Background="{DynamicResource Brush.Border}" />
                                 <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="RedlineStartPermille" PreviewMouseRightButtonUp="FeedbackParameter_RightClick" ToolTip="{ui:Translate Text=&quot;At the default 96.2%, supported cars automatically use ACC's native HUD alarm RPM. Changing this value restores manual redline timing.&quot;}">
@@ -312,6 +376,15 @@
                                     <Slider x:Name="TcPulseSlider" Grid.Column="1" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;Traction control pulse strength&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Set to zero to turn off. Right-click to reset to 50.&quot;}" />
                                     <TextBlock x:Name="TcPulseValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="{ui:Translate Text=&quot;50 · Standard&quot;}" />
                                 </Grid>
+                                <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="TcPulseFrequency" PreviewMouseRightButtonUp="FeedbackParameter_RightClick">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterLabelWidth}" /><ColumnDefinition /><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterValueWidth}" /></Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
+                                        <TextBlock FontSize="{x:Static ui:UiTypography.ParameterSize}" FontWeight="{x:Static ui:UiTypography.ParameterWeight}" Text="{ui:Translate Text=&quot;Trigger vibration frequency&quot;}" />
+
+                                    </StackPanel>
+                                    <Slider x:Name="TcPulseFrequencySlider" Grid.Column="1" Minimum="0" Maximum="255" SmallChange="1" LargeChange="5" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;TC pulse frequency&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Right-click to reset to the default frequency.&quot;}" />
+                                    <TextBlock x:Name="TcPulseFrequencyValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="40 Hz" />
+                                </Grid>
                                 <Border Height="1" Background="{DynamicResource Brush.Border}" />
                                 <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="WheelspinPulse" PreviewMouseRightButtonUp="FeedbackParameter_RightClick">
                                     <Grid.ColumnDefinitions><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterLabelWidth}" /><ColumnDefinition /><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterValueWidth}" /></Grid.ColumnDefinitions>
@@ -321,6 +394,15 @@
                                     </StackPanel>
                                     <Slider x:Name="WheelspinPulseSlider" Grid.Column="1" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;Wheelspin warning strength&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Set to zero to turn off. Right-click to reset to 50.&quot;}" />
                                     <TextBlock x:Name="WheelspinPulseValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="{ui:Translate Text=&quot;50 · Standard&quot;}" />
+                                </Grid>
+                                <Grid Height="{x:Static ui:UiTypography.ParameterRowHeight}" Background="Transparent" Tag="WheelspinPulseFrequency" PreviewMouseRightButtonUp="FeedbackParameter_RightClick">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterLabelWidth}" /><ColumnDefinition /><ColumnDefinition Width="{x:Static ui:UiTypography.ParameterValueWidth}" /></Grid.ColumnDefinitions>
+                                    <StackPanel VerticalAlignment="Center" Margin="16,0,0,0">
+                                        <TextBlock FontSize="{x:Static ui:UiTypography.ParameterSize}" FontWeight="{x:Static ui:UiTypography.ParameterWeight}" Text="{ui:Translate Text=&quot;Trigger vibration frequency&quot;}" />
+
+                                    </StackPanel>
+                                    <Slider x:Name="WheelspinPulseFrequencySlider" Grid.Column="1" Minimum="0" Maximum="255" SmallChange="1" LargeChange="5" Style="{StaticResource Slider.Compact}" AutomationProperties.Name="{ui:Translate Text=&quot;Wheelspin warning frequency&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Right-click to reset to the default frequency.&quot;}" />
+                                    <TextBlock x:Name="WheelspinPulseFrequencyValue" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{StaticResource Type.ParameterReadout}" Text="7 Hz" />
                                 </Grid>
 
                                 <Border Height="1" Margin="0,15,0,16" Background="{DynamicResource Brush.BorderStrong}" />

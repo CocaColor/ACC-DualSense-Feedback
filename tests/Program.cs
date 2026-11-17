@@ -112,6 +112,7 @@ internal static class Program
         BrakeSupportCaptureChecks.Run(Check);
         BrakeCaptureIntegrationChecks.Run(Check);
         BrakePedalFeedbackChecks.Run(Check);
+        FrequencySettingsChecks.Run(Check);
         ShiftCueChecks.Run(Check);
         TractionFeedbackChecks.Run(Check);
         TcTelemetryChecks.Run(Check);

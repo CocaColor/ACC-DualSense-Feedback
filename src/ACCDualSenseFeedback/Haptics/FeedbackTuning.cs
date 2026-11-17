@@ -15,6 +15,22 @@ internal sealed record FeedbackProfile
     public const int DefaultEngineTexture = 20;
     public const int DefaultCollisionFeedback = 60;
 
+    public const int DefaultAbsPulseTriggerFrequency = 15;
+    public const int DefaultAbsPulseGripFrequency = 16;
+    public const int DefaultLockPulseTriggerFrequency = 8;
+    public const int DefaultLockPulseGripFrequency = 8;
+    public const int DefaultShiftKickTriggerFrequency = 28;
+    public const int DefaultShiftKickGripFrequency = 32;
+    public const int DefaultRedlinePulseFrequency = 18;
+    public const int DefaultTcPulseFrequency = 40;
+    public const int DefaultWheelspinPulseFrequency = 7;
+
+    // Both frequency sliders are exposed at the raw DualSense 0–255 range.
+    public const int MinTriggerFrequency = 0;
+    public const int MaxTriggerFrequency = 255;
+    public const int MinGripFrequency = 0;
+    public const int MaxGripFrequency = 255;
+
     public static readonly FeedbackProfile Default = new();
 
     public FeedbackPreset ActivePreset { get; init; } = FeedbackPreset.Default;
@@ -38,6 +54,19 @@ internal sealed record FeedbackProfile
     public int NativeAcc { get; init; } = NeutralValue;
     public int CollisionFeedback { get; init; } = DefaultCollisionFeedback;
 
+    public int AbsPulseTriggerFrequency { get; init; } = DefaultAbsPulseTriggerFrequency;
+    public int AbsPulseGripFrequency { get; init; } = DefaultAbsPulseGripFrequency;
+
+    public int LockPulseTriggerFrequency { get; init; } = DefaultLockPulseTriggerFrequency;
+    public int LockPulseGripFrequency { get; init; } = DefaultLockPulseGripFrequency;
+
+    public int ShiftKickTriggerFrequency { get; init; } = DefaultShiftKickTriggerFrequency;
+    public int ShiftKickGripFrequency { get; init; } = DefaultShiftKickGripFrequency;
+
+    public int RedlinePulseFrequency { get; init; } = DefaultRedlinePulseFrequency;
+    public int TcPulseFrequency { get; init; } = DefaultTcPulseFrequency;
+    public int WheelspinPulseFrequency { get; init; } = DefaultWheelspinPulseFrequency;
+
     public FeedbackProfile Sanitize()
         => this with
         {
@@ -55,7 +84,16 @@ internal sealed record FeedbackProfile
             RoadSurface = ClampStrength(RoadSurface),
             GripLoss = ClampStrength(GripLoss),
             NativeAcc = ClampStrength(NativeAcc),
-            CollisionFeedback = ClampStrength(CollisionFeedback)
+            CollisionFeedback = ClampStrength(CollisionFeedback),
+            AbsPulseTriggerFrequency = ClampTriggerFrequency(AbsPulseTriggerFrequency),
+            AbsPulseGripFrequency = ClampGripFrequency(AbsPulseGripFrequency),
+            LockPulseTriggerFrequency = ClampTriggerFrequency(LockPulseTriggerFrequency),
+            LockPulseGripFrequency = ClampGripFrequency(LockPulseGripFrequency),
+            ShiftKickTriggerFrequency = ClampTriggerFrequency(ShiftKickTriggerFrequency),
+            ShiftKickGripFrequency = ClampGripFrequency(ShiftKickGripFrequency),
+            RedlinePulseFrequency = ClampTriggerFrequency(RedlinePulseFrequency),
+            TcPulseFrequency = ClampTriggerFrequency(TcPulseFrequency),
+            WheelspinPulseFrequency = ClampTriggerFrequency(WheelspinPulseFrequency)
         };
 
     public FeedbackTuning ToTuning()
@@ -77,10 +115,27 @@ internal sealed record FeedbackProfile
             ScaleIntensity(NativeAcc, 1.35f),
             ScaleCalibrated(EngineTexture, DefaultEngineTexture, 2.00f),
             ScaleCalibrated(CollisionFeedback, DefaultCollisionFeedback, 1.50f),
-            RedlineStartPermille / 1000f);
+            RedlineStartPermille / 1000f)
+        {
+            AbsPulseTriggerFrequency = (byte)ClampTriggerFrequency(AbsPulseTriggerFrequency),
+            AbsPulseGripFrequency = (byte)ClampGripFrequency(AbsPulseGripFrequency),
+            LockPulseTriggerFrequency = (byte)ClampTriggerFrequency(LockPulseTriggerFrequency),
+            LockPulseGripFrequency = (byte)ClampGripFrequency(LockPulseGripFrequency),
+            ShiftKickTriggerFrequency = (byte)ClampTriggerFrequency(ShiftKickTriggerFrequency),
+            ShiftKickGripFrequency = (byte)ClampGripFrequency(ShiftKickGripFrequency),
+            RedlinePulseFrequency = (byte)ClampTriggerFrequency(RedlinePulseFrequency),
+            TcPulseFrequency = (byte)ClampTriggerFrequency(TcPulseFrequency),
+            WheelspinPulseFrequency = (byte)ClampTriggerFrequency(WheelspinPulseFrequency)
+        };
     }
 
     private static int ClampStrength(int value) => Math.Clamp(value, 0, 100);
+
+    private static int ClampTriggerFrequency(int value)
+        => Math.Clamp(value, MinTriggerFrequency, MaxTriggerFrequency);
+
+    private static int ClampGripFrequency(int value)
+        => Math.Clamp(value, MinGripFrequency, MaxGripFrequency);
 
     private static float ScaleIntensity(int value, float maximum)
     {
@@ -139,6 +194,19 @@ internal readonly record struct FeedbackTuning(
     float CollisionFeedbackScale,
     float RedlineStartRatio)
 {
+    public byte AbsPulseTriggerFrequency { get; init; } = (byte)FeedbackProfile.DefaultAbsPulseTriggerFrequency;
+    public byte AbsPulseGripFrequency { get; init; } = (byte)FeedbackProfile.DefaultAbsPulseGripFrequency;
+
+    public byte LockPulseTriggerFrequency { get; init; } = (byte)FeedbackProfile.DefaultLockPulseTriggerFrequency;
+    public byte LockPulseGripFrequency { get; init; } = (byte)FeedbackProfile.DefaultLockPulseGripFrequency;
+
+    public byte ShiftKickTriggerFrequency { get; init; } = (byte)FeedbackProfile.DefaultShiftKickTriggerFrequency;
+    public byte ShiftKickGripFrequency { get; init; } = (byte)FeedbackProfile.DefaultShiftKickGripFrequency;
+
+    public byte RedlinePulseFrequency { get; init; } = (byte)FeedbackProfile.DefaultRedlinePulseFrequency;
+    public byte TcPulseFrequency { get; init; } = (byte)FeedbackProfile.DefaultTcPulseFrequency;
+    public byte WheelspinPulseFrequency { get; init; } = (byte)FeedbackProfile.DefaultWheelspinPulseFrequency;
+
     public static readonly FeedbackTuning Neutral = new(
         1f, 1f,
         1f, 1f,

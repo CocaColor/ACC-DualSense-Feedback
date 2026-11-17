@@ -190,9 +190,14 @@ internal static partial class DiagnosticReportBuilder
         report.AppendLine($"Preset: {profile.ActivePreset}");
         report.AppendLine($"BrakeResistance={profile.BrakeResistance}; ThrottleResistance={profile.ThrottleResistance}");
         report.AppendLine($"AbsPulse={profile.AbsPulse}; LockPulse={profile.LockPulse}");
+        report.AppendLine($"AbsPulseTriggerFrequency={profile.AbsPulseTriggerFrequency}; AbsPulseGripFrequency={profile.AbsPulseGripFrequency}");
+        report.AppendLine($"LockPulseTriggerFrequency={profile.LockPulseTriggerFrequency}; LockPulseGripFrequency={profile.LockPulseGripFrequency}");
         report.AppendLine($"ShiftKick={profile.ShiftKick}; RedlinePulse={profile.RedlinePulse}; RedlineStartPermille={profile.RedlineStartPermille}");
+        report.AppendLine($"ShiftKickTriggerFrequency={profile.ShiftKickTriggerFrequency}; ShiftKickGripFrequency={profile.ShiftKickGripFrequency}");
+        report.AppendLine($"RedlinePulseFrequency={profile.RedlinePulseFrequency}");
         report.AppendLine($"EngineTexture={profile.EngineTexture}");
         report.AppendLine($"TcPulse={profile.TcPulse}; WheelspinPulse={profile.WheelspinPulse}");
+        report.AppendLine($"TcPulseFrequency={profile.TcPulseFrequency}; WheelspinPulseFrequency={profile.WheelspinPulseFrequency}");
         report.AppendLine($"RoadSurface={profile.RoadSurface}; GripLoss={profile.GripLoss}; NativeAcc={profile.NativeAcc}");
         report.AppendLine($"CollisionFeedback={profile.CollisionFeedback}");
     }

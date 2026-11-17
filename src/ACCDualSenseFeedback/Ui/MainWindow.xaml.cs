@@ -63,6 +63,15 @@ public partial class MainWindow : Window
         GripLossSlider.ValueChanged += FeedbackSlider_ValueChanged;
         NativeAccSlider.ValueChanged += FeedbackSlider_ValueChanged;
         CollisionFeedbackSlider.ValueChanged += FeedbackSlider_ValueChanged;
+        AbsPulseTriggerFrequencySlider.ValueChanged += FeedbackSlider_ValueChanged;
+        AbsPulseGripFrequencySlider.ValueChanged += FeedbackSlider_ValueChanged;
+        LockPulseTriggerFrequencySlider.ValueChanged += FeedbackSlider_ValueChanged;
+        LockPulseGripFrequencySlider.ValueChanged += FeedbackSlider_ValueChanged;
+        ShiftKickTriggerFrequencySlider.ValueChanged += FeedbackSlider_ValueChanged;
+        ShiftKickGripFrequencySlider.ValueChanged += FeedbackSlider_ValueChanged;
+        RedlinePulseFrequencySlider.ValueChanged += FeedbackSlider_ValueChanged;
+        TcPulseFrequencySlider.ValueChanged += FeedbackSlider_ValueChanged;
+        WheelspinPulseFrequencySlider.ValueChanged += FeedbackSlider_ValueChanged;
         AppendSessionLog("App ready");
     }
 
@@ -350,7 +359,16 @@ public partial class MainWindow : Window
             RoadSurface = (int)Math.Round(RoadSurfaceSlider.Value),
             GripLoss = (int)Math.Round(GripLossSlider.Value),
             NativeAcc = (int)Math.Round(NativeAccSlider.Value),
-            CollisionFeedback = (int)Math.Round(CollisionFeedbackSlider.Value)
+            CollisionFeedback = (int)Math.Round(CollisionFeedbackSlider.Value),
+            AbsPulseTriggerFrequency = (int)Math.Round(AbsPulseTriggerFrequencySlider.Value),
+            AbsPulseGripFrequency = (int)Math.Round(AbsPulseGripFrequencySlider.Value),
+            LockPulseTriggerFrequency = (int)Math.Round(LockPulseTriggerFrequencySlider.Value),
+            LockPulseGripFrequency = (int)Math.Round(LockPulseGripFrequencySlider.Value),
+            ShiftKickTriggerFrequency = (int)Math.Round(ShiftKickTriggerFrequencySlider.Value),
+            ShiftKickGripFrequency = (int)Math.Round(ShiftKickGripFrequencySlider.Value),
+            RedlinePulseFrequency = (int)Math.Round(RedlinePulseFrequencySlider.Value),
+            TcPulseFrequency = (int)Math.Round(TcPulseFrequencySlider.Value),
+            WheelspinPulseFrequency = (int)Math.Round(WheelspinPulseFrequencySlider.Value)
         });
     }
 
@@ -389,6 +407,33 @@ public partial class MainWindow : Window
                 (_profile with { NativeAcc = FeedbackProfile.NeutralValue }, "Original ACC", "50"),
             nameof(FeedbackProfile.CollisionFeedback) =>
                 (_profile with { CollisionFeedback = FeedbackProfile.DefaultCollisionFeedback }, "Collision impact", "60"),
+            nameof(FeedbackProfile.AbsPulseTriggerFrequency) =>
+                (_profile with { AbsPulseTriggerFrequency = FeedbackProfile.DefaultAbsPulseTriggerFrequency },
+                    "ABS pulse trigger frequency", "15 Hz"),
+            nameof(FeedbackProfile.AbsPulseGripFrequency) =>
+                (_profile with { AbsPulseGripFrequency = FeedbackProfile.DefaultAbsPulseGripFrequency },
+                    "ABS pulse grip frequency", "16 Hz"),
+            nameof(FeedbackProfile.LockPulseTriggerFrequency) =>
+                (_profile with { LockPulseTriggerFrequency = FeedbackProfile.DefaultLockPulseTriggerFrequency },
+                    "Wheel lock trigger frequency", "8 Hz"),
+            nameof(FeedbackProfile.LockPulseGripFrequency) =>
+                (_profile with { LockPulseGripFrequency = FeedbackProfile.DefaultLockPulseGripFrequency },
+                    "Wheel lock grip frequency", "8 Hz"),
+            nameof(FeedbackProfile.ShiftKickTriggerFrequency) =>
+                (_profile with { ShiftKickTriggerFrequency = FeedbackProfile.DefaultShiftKickTriggerFrequency },
+                    "Upshift kick trigger frequency", "28 Hz"),
+            nameof(FeedbackProfile.ShiftKickGripFrequency) =>
+                (_profile with { ShiftKickGripFrequency = FeedbackProfile.DefaultShiftKickGripFrequency },
+                    "Upshift kick grip frequency", "32 Hz"),
+            nameof(FeedbackProfile.RedlinePulseFrequency) =>
+                (_profile with { RedlinePulseFrequency = FeedbackProfile.DefaultRedlinePulseFrequency },
+                    "Redline pulse frequency", "18 Hz"),
+            nameof(FeedbackProfile.TcPulseFrequency) =>
+                (_profile with { TcPulseFrequency = FeedbackProfile.DefaultTcPulseFrequency },
+                    "TC pulse frequency", "40 Hz"),
+            nameof(FeedbackProfile.WheelspinPulseFrequency) =>
+                (_profile with { WheelspinPulseFrequency = FeedbackProfile.DefaultWheelspinPulseFrequency },
+                    "Wheelspin warning frequency", "7 Hz"),
             _ => (_profile, string.Empty, string.Empty)
         };
 
@@ -460,6 +505,15 @@ public partial class MainWindow : Window
         GripLossSlider.Value = _profile.GripLoss;
         NativeAccSlider.Value = _profile.NativeAcc;
         CollisionFeedbackSlider.Value = _profile.CollisionFeedback;
+        AbsPulseTriggerFrequencySlider.Value = _profile.AbsPulseTriggerFrequency;
+        AbsPulseGripFrequencySlider.Value = _profile.AbsPulseGripFrequency;
+        LockPulseTriggerFrequencySlider.Value = _profile.LockPulseTriggerFrequency;
+        LockPulseGripFrequencySlider.Value = _profile.LockPulseGripFrequency;
+        ShiftKickTriggerFrequencySlider.Value = _profile.ShiftKickTriggerFrequency;
+        ShiftKickGripFrequencySlider.Value = _profile.ShiftKickGripFrequency;
+        RedlinePulseFrequencySlider.Value = _profile.RedlinePulseFrequency;
+        TcPulseFrequencySlider.Value = _profile.TcPulseFrequency;
+        WheelspinPulseFrequencySlider.Value = _profile.WheelspinPulseFrequency;
 
         _updatingSliders = false;
         UpdateModuleControls();
@@ -494,6 +548,15 @@ public partial class MainWindow : Window
         SetModuleControl(GripLossSlider, GripLossValue, _profile.GripLoss);
         SetModuleControl(NativeAccSlider, NativeAccValue, _profile.NativeAcc);
         SetModuleControl(CollisionFeedbackSlider, CollisionFeedbackValue, _profile.CollisionFeedback);
+        SetFrequencyControl(AbsPulseTriggerFrequencySlider, AbsPulseTriggerFrequencyValue, _profile.AbsPulseTriggerFrequency);
+        SetFrequencyControl(AbsPulseGripFrequencySlider, AbsPulseGripFrequencyValue, _profile.AbsPulseGripFrequency);
+        SetFrequencyControl(LockPulseTriggerFrequencySlider, LockPulseTriggerFrequencyValue, _profile.LockPulseTriggerFrequency);
+        SetFrequencyControl(LockPulseGripFrequencySlider, LockPulseGripFrequencyValue, _profile.LockPulseGripFrequency);
+        SetFrequencyControl(ShiftKickTriggerFrequencySlider, ShiftKickTriggerFrequencyValue, _profile.ShiftKickTriggerFrequency);
+        SetFrequencyControl(ShiftKickGripFrequencySlider, ShiftKickGripFrequencyValue, _profile.ShiftKickGripFrequency);
+        SetFrequencyControl(RedlinePulseFrequencySlider, RedlinePulseFrequencyValue, _profile.RedlinePulseFrequency);
+        SetFrequencyControl(TcPulseFrequencySlider, TcPulseFrequencyValue, _profile.TcPulseFrequency);
+        SetFrequencyControl(WheelspinPulseFrequencySlider, WheelspinPulseFrequencyValue, _profile.WheelspinPulseFrequency);
 
         RedlineStartValue.Text = $"{_profile.RedlineStartPermille / 10f:0.0}%";
     }
@@ -514,6 +577,14 @@ public partial class MainWindow : Window
             FontFamily = UiTypography.TextFont
         });
 #endif
+    }
+
+    private static void SetFrequencyControl(Slider slider, TextBlock readout, int value)
+    {
+        slider.IsEnabled = true;
+        slider.Opacity = 1;
+        readout.Opacity = 1;
+        readout.Text = $"{value} Hz";
     }
 
     private static string DescribeStrength(int value) => UiText.Get(value switch

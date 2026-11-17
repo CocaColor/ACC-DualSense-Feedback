@@ -13,14 +13,21 @@ internal static class BrakePedalFeedback
         => FeedbackTuning.ScaleTrigger(TriggerEffect.FeedbackZones(ResistanceZones),
             float.IsFinite(scale) ? Math.Clamp(scale, 0f, 1.35f) : 0f);
 
-    public static TriggerEffect BuildAbs(float baselineScale, float envelope, float eventScale)
+    public static TriggerEffect BuildAbs(float baselineScale, float envelope, float eventScale,
+        byte frequency = FeedbackProfile.DefaultAbsPulseTriggerFrequency)
     {
         if (!float.IsFinite(eventScale) || eventScale <= 0f ||
             !float.IsFinite(envelope) || envelope < 0.035f)
             return CreateResistance(baselineScale);
 
+        // A zero frequency disables the ABS vibration but must not remove the
+        // resting trigger resistance.
+        if (frequency == 0)
+            return CreateResistance(baselineScale);
+
         // Preserve the original threshold, envelope-to-amplitude calibration,
-        // start zone and hardware-driven 15 Hz cadence.
+        // start zone and hardware-driven cadence. The cadence is now supplied by
+        // the profile; 15 Hz remains the default.
         float developed = Math.Clamp((envelope - 0.035f) / (0.75f - 0.035f), 0f, 1f);
         developed = developed * developed * (3f - 2f * developed);
         int calibratedAmplitude = Math.Clamp(2 + (int)MathF.Floor(developed * 4f), 2, 5);
@@ -31,7 +38,7 @@ internal static class BrakePedalFeedback
         // Isolated ABS retains its original command, including low settings.
         if (supportGain == 0f)
             return TriggerEffect.Vibration(2,
-                (byte)Math.Clamp((int)MathF.Round(eventAmplitude), 1, 8), 15);
+                (byte)Math.Clamp((int)MathF.Round(eventAmplitude), 1, 8), frequency);
 
         Span<byte> amplitudes = stackalloc byte[10];
         amplitudes.Clear();
@@ -45,6 +52,6 @@ internal static class BrakePedalFeedback
         }
 
         // These are vibration amplitudes, not a second feedback-force layer.
-        return TriggerEffect.VibrationZones(amplitudes, 15);
+        return TriggerEffect.VibrationZones(amplitudes, frequency);
     }
 }

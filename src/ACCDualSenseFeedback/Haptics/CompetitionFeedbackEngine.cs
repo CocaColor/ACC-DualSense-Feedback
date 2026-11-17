@@ -195,13 +195,14 @@ internal sealed class CompetitionFeedbackEngine
             ? BrakePedalFeedback.BuildAbs(
                 tuning.BrakeResistanceScale,
                 absCue,
-                tuning.AbsPulseScale)
+                tuning.AbsPulseScale,
+                tuning.AbsPulseTriggerFrequency)
             : lockCue >= 0.035f ? BuildEventPedal(
                 BrakeZones,
                 tuning.BrakeResistanceScale,
                 lockCue,
                 tuning.LockPulseScale,
-                2, 2, 6, 8)
+                2, 2, 6, tuning.LockPulseTriggerFrequency)
             : BrakePedalFeedback.CreateResistance(tuning.BrakeResistanceScale);
 
         float tcCue = traction.TcStrength;
@@ -214,24 +215,24 @@ internal sealed class CompetitionFeedbackEngine
                 tuning.ThrottleResistanceScale,
                 _shiftEnvelope,
                 tuning.ShiftKickScale,
-                1, 2, 5, 28);
+                1, 2, 5, tuning.ShiftKickTriggerFrequency);
         else if (tcCue >= .035f)
             rightTrigger = BuildEventPedal(ThrottleZones, tuning.ThrottleResistanceScale,
-                tcCue, tuning.TcPulseScale, 2, 1, 4, 40);
+                tcCue, tuning.TcPulseScale, 2, 1, 4, tuning.TcPulseFrequency);
         else if (wheelspinCue >= redlineCue * 0.85f)
             rightTrigger = BuildEventPedal(
                 ThrottleZones,
                 tuning.ThrottleResistanceScale,
                 wheelspinCue,
                 tuning.WheelspinPulseScale,
-                2, 2, 5, 7);
+                2, 2, 5, tuning.WheelspinPulseFrequency);
         else
             rightTrigger = BuildEventPedal(
                 ThrottleZones,
                 tuning.ThrottleResistanceScale,
                 redlineCue,
                 tuning.RedlinePulseScale,
-                1, 2, 4, 18);
+                1, 2, 4, tuning.RedlinePulseFrequency);
 
         double seconds = now / (double)Stopwatch.Frequency;
 
@@ -368,9 +369,15 @@ internal sealed class CompetitionFeedbackEngine
         float nativeDetailLeft = routedNativeDetail * leftIsolation * tuning.NativeAccScale;
         float nativeDetailRight = routedNativeDetail * rightIsolation * tuning.NativeAccScale;
 
-        float absBody = _absEnvelope * Wave(seconds, 16f, 0.24f) * 0.13f * tuning.AbsPulseScale;
-        float lockBody = _lockEnvelope * Wave(seconds, 8f, 0.34f) * 0.16f * tuning.LockPulseScale;
-        float shiftBody = _shiftEnvelope * Wave(seconds, 32f, 0.42f) * 0.26f * tuning.ShiftKickScale;
+        float absBody = tuning.AbsPulseGripFrequency > 0
+            ? _absEnvelope * Wave(seconds, tuning.AbsPulseGripFrequency, 0.24f) * 0.13f * tuning.AbsPulseScale
+            : 0f;
+        float lockBody = tuning.LockPulseGripFrequency > 0
+            ? _lockEnvelope * Wave(seconds, tuning.LockPulseGripFrequency, 0.34f) * 0.16f * tuning.LockPulseScale
+            : 0f;
+        float shiftBody = tuning.ShiftKickGripFrequency > 0
+            ? _shiftEnvelope * Wave(seconds, tuning.ShiftKickGripFrequency, 0.42f) * 0.26f * tuning.ShiftKickScale
+            : 0f;
 
         // Build the directional layer first, then impose a final isolation cap.
         // This is deliberately after native-detail merging: otherwise ACC's
@@ -480,6 +487,8 @@ internal sealed class CompetitionFeedbackEngine
         TriggerEffect restingEffect = FeedbackTuning.ScaleTrigger(
             TriggerEffect.FeedbackZones(baseline),
             baselineScale);
+        if (frequency == 0)
+            return restingEffect;
         if (eventScale <= 0f || envelope < 0.035f)
             return restingEffect;
 

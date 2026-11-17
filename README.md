@@ -83,6 +83,8 @@ Start with **Default** for calibrated feedback, Smooth lighting and gyro off. Ch
 
 Strength controls cover **0–100 in one-point steps**. Setting a cue to **0 turns only that cue off**. Right-click a parameter row to restore its calibrated default. Changes apply immediately and select Custom; returning to Default does not erase your Custom values.
 
+**Vibration frequency is adjustable too:** ABS pulse, wheel lock and upshift kick each expose **trigger vibration frequency** and **grip vibration frequency**; redline pulse, TC pulse and wheelspin warning each expose **trigger vibration frequency**. Both frequency types use the controller's raw **0–255** range; 0 disables that vibration layer while retaining the resting trigger resistance. Slider defaults preserve the original fixed values, and right-clicking a frequency row restores its default.
+
 **Keep Pulse begins at its default 96.2% for automatic native HUD timing on supported cars.** Changing it selects manual R2 timing at **94.0%–99.0% of maximum RPM** and returns lighting to its generic **97%** reference; HUD synchronization is no longer guaranteed. Right-click the row to restore the default. Use the separate strength controls to adjust intensity. Unknown cars retain the generic RPM-based cue.
 
 Custom feedback, lighting and gyro choices are saved beside the EXE. Returning to Default preserves your saved Custom choices. English and Chinese editions share the same settings format.
