@@ -4,6 +4,8 @@
 >
 > This repository and its release notes were produced with AI assistance and may contain mistakes. Review the code, build artifacts and settings before use. Use at your own risk.
 
+<p align="center">English · <a href="README.zh-CN.md">简体中文</a></p>
+
 ## v1.2.1.2 — Pedal resistance mode
 
 Adds a selectable pedal-resistance mode on top of v1.2.1.1.
