@@ -4,8 +4,6 @@
 >
 > This repository and its release notes were produced with AI assistance and may contain mistakes. Review the code, build artifacts and settings before use. Use at your own risk.
 
-<p align="center">English · <a href="README.zh-CN.md">简体中文</a></p>
-
 ## v1.2.1.2 — Pedal resistance mode
 
 Adds a selectable pedal-resistance mode on top of v1.2.1.1.
@@ -21,7 +19,7 @@ Adds a selectable pedal-resistance mode on top of v1.2.1.1.
 ### Verification
 
 - Full test harness: **176/176 checks passed**.
-- UI render checks cover the switch, Default preset, Reset all and the blue off state.
+- UI render checks cover the switch, Default preset and Reset all.
 
 ### Downloads
 

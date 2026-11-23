@@ -19,7 +19,7 @@ Adds a selectable pedal-resistance mode on top of v1.2.1.1.
 ### Verification
 
 - Full test harness: **176/176 checks passed**.
-- UI render checks cover the switch, Default preset, Reset all and the blue off state.
+- UI render checks cover the switch, Default preset and Reset all.
 
 ### Downloads
 
