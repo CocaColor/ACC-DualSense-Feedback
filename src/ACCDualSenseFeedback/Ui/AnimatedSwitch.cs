@@ -8,6 +8,16 @@ namespace ACCDualSenseFeedback.Ui;
 
 public sealed class AnimatedSwitch : ToggleButton
 {
+    public static readonly DependencyProperty OffColorKeyProperty = DependencyProperty.Register(
+        nameof(OffColorKey), typeof(string), typeof(AnimatedSwitch),
+        new PropertyMetadata("Color.BorderStrong", OnColorChanged));
+
+    public string OffColorKey
+    {
+        get => (string)GetValue(OffColorKeyProperty);
+        set => SetValue(OffColorKeyProperty, value);
+    }
+
     private TranslateTransform? _thumb;
     private SolidColorBrush? _track;
 
@@ -36,7 +46,7 @@ public sealed class AnimatedSwitch : ToggleButton
     {
         if (_thumb is null || _track is null) return;
         double target = IsChecked == true ? 18 : 0;
-        Color color = (Color)FindResource(IsChecked == true ? "Color.Brand" : "Color.BorderStrong");
+        Color color = (Color)FindResource(IsChecked == true ? "Color.Brand" : OffColorKey);
         if (animate && SystemParameters.ClientAreaAnimation)
         {
             var easing = new CubicEase { EasingMode = EasingMode.EaseOut };
@@ -53,4 +63,7 @@ public sealed class AnimatedSwitch : ToggleButton
             _track.Color = color;
         }
     }
+
+    private static void OnColorChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        => ((AnimatedSwitch)sender).UpdateVisual(false);
 }

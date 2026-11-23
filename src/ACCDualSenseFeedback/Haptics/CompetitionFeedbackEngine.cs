@@ -196,14 +196,18 @@ internal sealed class CompetitionFeedbackEngine
                 tuning.BrakeResistanceScale,
                 absCue,
                 tuning.AbsPulseScale,
-                tuning.AbsPulseTriggerFrequency)
+                tuning.AbsPulseTriggerFrequency,
+                tuning.ConstantPedalResistance,
+                tuning.BrakeConstantResistance)
             : lockCue >= 0.035f ? BuildEventPedal(
                 BrakeZones,
                 tuning.BrakeResistanceScale,
                 lockCue,
                 tuning.LockPulseScale,
-                2, 2, 6, tuning.LockPulseTriggerFrequency)
-            : BrakePedalFeedback.CreateResistance(tuning.BrakeResistanceScale);
+                2, 2, 6, tuning.LockPulseTriggerFrequency,
+                tuning.ConstantPedalResistance,
+                tuning.BrakeConstantResistance)
+            : BuildRestingResistance(tuning, brake: true);
 
         float tcCue = traction.TcStrength;
         float wheelspinCue = traction.WheelspinStrength;
@@ -215,24 +219,32 @@ internal sealed class CompetitionFeedbackEngine
                 tuning.ThrottleResistanceScale,
                 _shiftEnvelope,
                 tuning.ShiftKickScale,
-                1, 2, 5, tuning.ShiftKickTriggerFrequency);
+                1, 2, 5, tuning.ShiftKickTriggerFrequency,
+                tuning.ConstantPedalResistance,
+                tuning.ThrottleConstantResistance);
         else if (tcCue >= .035f)
             rightTrigger = BuildEventPedal(ThrottleZones, tuning.ThrottleResistanceScale,
-                tcCue, tuning.TcPulseScale, 2, 1, 4, tuning.TcPulseFrequency);
+                tcCue, tuning.TcPulseScale, 2, 1, 4, tuning.TcPulseFrequency,
+                tuning.ConstantPedalResistance,
+                tuning.ThrottleConstantResistance);
         else if (wheelspinCue >= redlineCue * 0.85f)
             rightTrigger = BuildEventPedal(
                 ThrottleZones,
                 tuning.ThrottleResistanceScale,
                 wheelspinCue,
                 tuning.WheelspinPulseScale,
-                2, 2, 5, tuning.WheelspinPulseFrequency);
+                2, 2, 5, tuning.WheelspinPulseFrequency,
+                tuning.ConstantPedalResistance,
+                tuning.ThrottleConstantResistance);
         else
             rightTrigger = BuildEventPedal(
                 ThrottleZones,
                 tuning.ThrottleResistanceScale,
                 redlineCue,
                 tuning.RedlinePulseScale,
-                1, 2, 4, tuning.RedlinePulseFrequency);
+                1, 2, 4, tuning.RedlinePulseFrequency,
+                tuning.ConstantPedalResistance,
+                tuning.ThrottleConstantResistance);
 
         double seconds = now / (double)Stopwatch.Frequency;
 
@@ -474,6 +486,15 @@ internal sealed class CompetitionFeedbackEngine
             rightTrigger);
     }
 
+    private static TriggerEffect BuildRestingResistance(in FeedbackTuning tuning, bool brake)
+        => tuning.ConstantPedalResistance
+            ? TriggerEffect.Rigid(brake
+                ? tuning.BrakeConstantResistance
+                : tuning.ThrottleConstantResistance)
+            : BrakePedalFeedback.CreateResistance(brake
+                ? tuning.BrakeResistanceScale
+                : tuning.ThrottleResistanceScale);
+
     private static TriggerEffect BuildEventPedal(
         ReadOnlySpan<byte> baseline,
         float baselineScale,
@@ -482,11 +503,15 @@ internal sealed class CompetitionFeedbackEngine
         byte startPosition,
         byte minimumAmplitude,
         byte maximumAmplitude,
-        byte frequency)
+        byte frequency,
+        bool constantResistance = false,
+        float constantForce = 0f)
     {
-        TriggerEffect restingEffect = FeedbackTuning.ScaleTrigger(
-            TriggerEffect.FeedbackZones(baseline),
-            baselineScale);
+        TriggerEffect restingEffect = constantResistance && float.IsFinite(constantForce)
+            ? TriggerEffect.Rigid(constantForce)
+            : FeedbackTuning.ScaleTrigger(
+                TriggerEffect.FeedbackZones(baseline),
+                baselineScale);
         if (frequency == 0)
             return restingEffect;
         if (eventScale <= 0f || envelope < 0.035f)

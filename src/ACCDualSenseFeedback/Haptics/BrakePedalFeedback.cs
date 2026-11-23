@@ -13,17 +13,24 @@ internal static class BrakePedalFeedback
         => FeedbackTuning.ScaleTrigger(TriggerEffect.FeedbackZones(ResistanceZones),
             float.IsFinite(scale) ? Math.Clamp(scale, 0f, 1.35f) : 0f);
 
+    private static TriggerEffect BuildRestingResistance(
+        float baselineScale, bool constantResistance, float constantForce)
+        => constantResistance && float.IsFinite(constantForce)
+            ? TriggerEffect.Rigid(constantForce)
+            : CreateResistance(baselineScale);
+
     public static TriggerEffect BuildAbs(float baselineScale, float envelope, float eventScale,
-        byte frequency = FeedbackProfile.DefaultAbsPulseTriggerFrequency)
+        byte frequency = FeedbackProfile.DefaultAbsPulseTriggerFrequency,
+        bool constantResistance = false, float constantForce = 0f)
     {
         if (!float.IsFinite(eventScale) || eventScale <= 0f ||
             !float.IsFinite(envelope) || envelope < 0.035f)
-            return CreateResistance(baselineScale);
+            return BuildRestingResistance(baselineScale, constantResistance, constantForce);
 
         // A zero frequency disables the ABS vibration but must not remove the
         // resting trigger resistance.
         if (frequency == 0)
-            return CreateResistance(baselineScale);
+            return BuildRestingResistance(baselineScale, constantResistance, constantForce);
 
         // Preserve the original threshold, envelope-to-amplitude calibration,
         // start zone and hardware-driven cadence. The cadence is now supplied by

@@ -188,11 +188,15 @@
                             </ScrollViewer.Resources>
                             <StackPanel>
                                 <Grid Height="{x:Static ui:UiTypography.ModuleHeaderHeight}">
-                                    <Grid.ColumnDefinitions><ColumnDefinition Width="31" /><ColumnDefinition /></Grid.ColumnDefinitions>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="31" /><ColumnDefinition /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
                                     <TextBlock VerticalAlignment="Top" FontFamily="{StaticResource Font.Latin}" Foreground="{DynamicResource Brush.Brand}" FontSize="10.5" FontWeight="Bold" Text="01" />
                                     <StackPanel Grid.Column="1">
                                         <TextBlock FontSize="14" FontWeight="SemiBold" Text="{ui:Translate Text=&quot;Pedal resistance&quot;}" />
                                         <TextBlock Margin="0,2,0,0" Style="{StaticResource Type.Caption}" Text="{ui:Translate Text=&quot;Resting L2 and R2 force · event pulses stay independent&quot;}" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                                        <TextBlock x:Name="PedalResistanceModeLabel" VerticalAlignment="Center" FontSize="12" FontWeight="Medium" Foreground="{DynamicResource Brush.TextSecondary}" Text="{ui:Translate Text=&quot;Progressive resistance&quot;}" />
+                                        <ui:AnimatedSwitch x:Name="PedalResistanceModeSwitch" Margin="10,0,0,0" Style="{StaticResource Switch.Lighting}" OffColorKey="Color.Info" Checked="PedalResistanceModeChanged" Unchecked="PedalResistanceModeChanged" AutomationProperties.Name="{ui:Translate Text=&quot;Pedal resistance mode&quot;}" AutomationProperties.HelpText="{ui:Translate Text=&quot;Progressive resistance gets firmer toward the end. Constant light resistance stays light through the full travel.&quot;}" />
                                     </StackPanel>
                                 </Grid>
 

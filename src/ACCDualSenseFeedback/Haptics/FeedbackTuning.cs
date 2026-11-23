@@ -8,6 +8,12 @@ internal enum FeedbackPreset
     Custom
 }
 
+internal enum PedalResistanceMode
+{
+    Progressive,
+    ConstantLight
+}
+
 internal sealed record FeedbackProfile
 {
     public const int NeutralValue = 50;
@@ -37,6 +43,7 @@ internal sealed record FeedbackProfile
 
     public int BrakeResistance { get; init; } = NeutralValue;
     public int ThrottleResistance { get; init; } = NeutralValue;
+    public PedalResistanceMode PedalResistanceMode { get; init; } = PedalResistanceMode.Progressive;
 
     public int AbsPulse { get; init; } = NeutralValue;
     public int LockPulse { get; init; } = NeutralValue;
@@ -73,6 +80,9 @@ internal sealed record FeedbackProfile
             ActivePreset = Enum.IsDefined(ActivePreset) ? ActivePreset : FeedbackPreset.Default,
             BrakeResistance = ClampStrength(BrakeResistance),
             ThrottleResistance = ClampStrength(ThrottleResistance),
+            PedalResistanceMode = Enum.IsDefined(PedalResistanceMode)
+                ? PedalResistanceMode
+                : PedalResistanceMode.Progressive,
             AbsPulse = ClampStrength(AbsPulse),
             LockPulse = ClampStrength(LockPulse),
             ShiftKick = ClampStrength(ShiftKick),
@@ -125,11 +135,24 @@ internal sealed record FeedbackProfile
             ShiftKickGripFrequency = (byte)ClampGripFrequency(ShiftKickGripFrequency),
             RedlinePulseFrequency = (byte)ClampTriggerFrequency(RedlinePulseFrequency),
             TcPulseFrequency = (byte)ClampTriggerFrequency(TcPulseFrequency),
-            WheelspinPulseFrequency = (byte)ClampTriggerFrequency(WheelspinPulseFrequency)
+            WheelspinPulseFrequency = (byte)ClampTriggerFrequency(WheelspinPulseFrequency),
+            ConstantPedalResistance = PedalResistanceMode == PedalResistanceMode.ConstantLight,
+            BrakeConstantResistance = ConstantLightForce(BrakeResistance),
+            ThrottleConstantResistance = ConstantLightForce(ThrottleResistance)
         };
     }
 
     private static int ClampStrength(int value) => Math.Clamp(value, 0, 100);
+
+    // Constant-light mode uses 0x01 continuous resistance. Its 8-bit force
+    // stays light even at 100 so the setting keeps the full-travel feel.
+    private static float ConstantLightForce(int value)
+    {
+        int clamped = ClampStrength(value);
+        if (clamped <= 0)
+            return 0f;
+        return clamped / 100f * 0.40f;
+    }
 
     private static int ClampTriggerFrequency(int value)
         => Math.Clamp(value, MinTriggerFrequency, MaxTriggerFrequency);
@@ -206,6 +229,10 @@ internal readonly record struct FeedbackTuning(
     public byte RedlinePulseFrequency { get; init; } = (byte)FeedbackProfile.DefaultRedlinePulseFrequency;
     public byte TcPulseFrequency { get; init; } = (byte)FeedbackProfile.DefaultTcPulseFrequency;
     public byte WheelspinPulseFrequency { get; init; } = (byte)FeedbackProfile.DefaultWheelspinPulseFrequency;
+
+    public bool ConstantPedalResistance { get; init; }
+    public float BrakeConstantResistance { get; init; }
+    public float ThrottleConstantResistance { get; init; }
 
     public static readonly FeedbackTuning Neutral = new(
         1f, 1f,

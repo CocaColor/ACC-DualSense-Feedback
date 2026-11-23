@@ -188,6 +188,7 @@ internal static partial class DiagnosticReportBuilder
         report.AppendLine();
         report.AppendLine("[Feedback profile]");
         report.AppendLine($"Preset: {profile.ActivePreset}");
+        report.AppendLine($"PedalResistanceMode={profile.PedalResistanceMode}");
         report.AppendLine($"BrakeResistance={profile.BrakeResistance}; ThrottleResistance={profile.ThrottleResistance}");
         report.AppendLine($"AbsPulse={profile.AbsPulse}; LockPulse={profile.LockPulse}");
         report.AppendLine($"AbsPulseTriggerFrequency={profile.AbsPulseTriggerFrequency}; AbsPulseGripFrequency={profile.AbsPulseGripFrequency}");

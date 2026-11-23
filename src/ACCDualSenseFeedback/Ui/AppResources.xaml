@@ -17,6 +17,7 @@
     <Color x:Key="Color.BrandHover">#FFCA1828</Color>
     <Color x:Key="Color.Success">#FF51D486</Color>
     <Color x:Key="Color.Warning">#FFE0A23F</Color>
+    <Color x:Key="Color.Info">#FF2F6FEB</Color>
 
     <SolidColorBrush x:Key="Brush.Window" Color="{StaticResource Color.Window}" />
     <SolidColorBrush x:Key="Brush.Canvas" Color="{StaticResource Color.Canvas}" />
@@ -31,6 +32,7 @@
     <SolidColorBrush x:Key="Brush.BrandHover" Color="{StaticResource Color.BrandHover}" />
     <SolidColorBrush x:Key="Brush.Success" Color="{StaticResource Color.Success}" />
     <SolidColorBrush x:Key="Brush.Warning" Color="{StaticResource Color.Warning}" />
+    <SolidColorBrush x:Key="Brush.Info" Color="{StaticResource Color.Info}" />
     <SolidColorBrush x:Key="Brush.GyroReady" Color="#FF3F765C" />
     <SolidColorBrush x:Key="Brush.GyroAttention" Color="#FF8B5C15" />
 

@@ -113,6 +113,7 @@ internal static class Program
         BrakeCaptureIntegrationChecks.Run(Check);
         BrakePedalFeedbackChecks.Run(Check);
         FrequencySettingsChecks.Run(Check);
+        PedalResistanceModeChecks.Run(Check);
         ShiftCueChecks.Run(Check);
         TractionFeedbackChecks.Run(Check);
         TcTelemetryChecks.Run(Check);
@@ -147,13 +148,37 @@ internal static class Program
         var app = new Application();
         app.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri(
             "/ACCDualSenseFeedback;component/Ui/AppResources.xaml", UriKind.RelativeOrAbsolute) });
+        File.Delete(Path.Combine(AppContext.BaseDirectory, "ACCDualSenseFeedback.settings.json"));
         var window = new MainWindow(); // Never Show(): Loaded never starts HID/runtime.
+        var modeSwitch = (AnimatedSwitch)window.FindName("PedalResistanceModeSwitch");
+        var modeLabel = (TextBlock)window.FindName("PedalResistanceModeLabel");
+        Assert(modeSwitch.IsChecked == true && !modeSwitch.IsEnabled,
+            "Default preset did not show disabled progressive resistance");
+        Assert(modeLabel.Text == UiText.Get("Progressive"),
+            "pedal resistance mode label did not start progressive");
+
         FieldInfo profileField = typeof(MainWindow).GetField("_profile", BindingFlags.NonPublic | BindingFlags.Instance)!;
-        var customProfile = ((FeedbackProfile)profileField.GetValue(window)!) with { ActivePreset = FeedbackPreset.Custom };
+        var customProfile = FeedbackProfile.Default with
+        {
+            ActivePreset = FeedbackPreset.Custom,
+            PedalResistanceMode = PedalResistanceMode.Progressive
+        };
         profileField.SetValue(window, customProfile);
         ((FeedbackProfileState)typeof(MainWindow).GetField("_profileState", BindingFlags.NonPublic | BindingFlags.Instance)!
             .GetValue(window)!).Update(customProfile);
         typeof(MainWindow).GetMethod("ApplyProfileVisuals", BindingFlags.NonPublic | BindingFlags.Instance)!.Invoke(window, [false]);
+        Assert(modeSwitch.IsChecked == true && modeSwitch.IsEnabled,
+            "Custom preset did not enable progressive resistance");
+        modeSwitch.IsChecked = false;
+        Assert(modeLabel.Text == UiText.Get("Constant light"),
+            "pedal resistance mode switch did not select constant light");
+        typeof(MainWindow).GetMethod("ResetFeedbackButton_Click",
+            BindingFlags.NonPublic | BindingFlags.Instance)!.Invoke(window, [null!, new RoutedEventArgs()]);
+        Assert(modeSwitch.IsChecked == true,
+            "Reset all did not restore progressive pedal resistance");
+        ((CancellationTokenSource?)typeof(MainWindow).GetField("_profileSaveCancellation",
+            BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(window))?.Cancel();
+
         object? originalProfile = profileField.GetValue(window);
         var root = (FrameworkElement)window.Content;
         window.Content = null;
@@ -161,6 +186,13 @@ internal static class Program
         typeof(MainWindow).GetMethod("CompletePageTransition", BindingFlags.NonPublic | BindingFlags.Instance)!.Invoke(window, [panel]);
         root.Measure(new Size(920, 580)); root.Arrange(new Rect(0, 0, 920, 580)); root.UpdateLayout();
         var scroll = Descendants<ScrollViewer>(panel).First();
+        scroll.ScrollToTop(); root.UpdateLayout(); Capture("settings-top.png");
+        modeSwitch.IsChecked = false; Pump(220); Capture("settings-constant.png");
+        var modeTrack = (Border)modeSwitch.Template.FindName("PART_Track", modeSwitch);
+        Assert(((SolidColorBrush)modeTrack.Background).Color ==
+            (Color)Application.Current.FindResource("Color.Info"),
+            "constant-light switch did not turn blue");
+        modeSwitch.IsChecked = true; Pump(220);
         scroll.ScrollToEnd(); root.UpdateLayout();
         var toggle = (AnimatedSwitch)window.FindName("LightsEnabledSwitch");
         void Pump(int milliseconds)

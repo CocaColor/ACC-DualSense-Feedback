@@ -33,6 +33,7 @@ public partial class MainWindow : Window
     private bool _accConnected;
     private bool _feedbackLive;
     private bool _updatingSliders;
+    private bool _updatingPedalResistanceMode;
     private FeedbackRuntimeStatus? _lastRuntimeStatus;
     private Exception? _lastRuntimeError;
     private DateTimeOffset? _lastRuntimeErrorAt;
@@ -559,6 +560,35 @@ public partial class MainWindow : Window
         SetFrequencyControl(WheelspinPulseFrequencySlider, WheelspinPulseFrequencyValue, _profile.WheelspinPulseFrequency);
 
         RedlineStartValue.Text = $"{_profile.RedlineStartPermille / 10f:0.0}%";
+        SyncPedalResistanceMode();
+    }
+
+    private void SyncPedalResistanceMode()
+    {
+        bool progressive = _profile.ActivePreset != FeedbackPreset.Custom ||
+            _profile.PedalResistanceMode == PedalResistanceMode.Progressive;
+        _updatingPedalResistanceMode = true;
+        PedalResistanceModeSwitch.IsChecked = progressive;
+        PedalResistanceModeSwitch.IsEnabled = _profile.ActivePreset == FeedbackPreset.Custom;
+        PedalResistanceModeLabel.Text = UiText.Get(progressive
+            ? "Progressive"
+            : "Constant light");
+        _updatingPedalResistanceMode = false;
+    }
+
+    private void PedalResistanceModeChanged(object sender, RoutedEventArgs e)
+    {
+        if (_updatingPedalResistanceMode || _closing ||
+            _profile.ActivePreset != FeedbackPreset.Custom)
+            return;
+
+        PedalResistanceMode mode = PedalResistanceModeSwitch.IsChecked == true
+            ? PedalResistanceMode.Progressive
+            : PedalResistanceMode.ConstantLight;
+        if (_profile.PedalResistanceMode == mode)
+            return;
+
+        ApplyCustomProfileChange(_profile with { PedalResistanceMode = mode });
     }
 
     private static void SetModuleControl(Slider slider, TextBlock readout, int value)
