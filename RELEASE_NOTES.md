@@ -15,8 +15,6 @@ Adds a selectable pedal-resistance mode on top of v1.2.1.1.
 - **Constant light** uses a single `0x01` continuous resistance with an 8-bit force, so the full trigger travel can stay lighter than the minimum `0x21` zone step.
 - The mode applies to both brake (L2) and throttle (R2) resting resistance. Event pulses remain independent.
 - **Reset all** restores Progressive. The selected mode is saved in the profile.
-- The startup confirmation pulse keeps the original progressive logic and does not follow the selected mode.
-- Fixed the Simplified Chinese font subset for 渐/恒; the Constant-light switch track turns blue.
 
 ### Verification
 
@@ -46,8 +44,6 @@ Adds independently adjustable trigger and grip vibration frequencies while prese
 - Every frequency slider uses the controller's raw **0–255** range. Setting a frequency to **0** disables that vibration layer while retaining the resting trigger resistance.
 - Frequency rows support right-click reset to their calibrated defaults.
 - The original fixed values remain the defaults: ABS 15/16, wheel lock 8/8, upshift 28/32, redline 18, TC 40 and wheelspin 7.
-- Removed the explanatory captions below the frequency sliders.
-- Updated the Simplified Chinese font subset so the new labels render at the correct weight.
 
 ### Verification
 
